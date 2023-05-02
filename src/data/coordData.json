@@ -1,0 +1,114 @@
+https://api.openrouteservice.org/geocode/search?api_key=5b3ce3597851110001cf62481a3db38aee124829a323f00cdd881f1a&text=sk27pw
+
+{
+    "geocoding": {
+        "version": "0.2",
+        "attribution": "https://openrouteservice.org/terms-of-service/#attribution-geocode",
+        "query": {
+            "text": "sk27pw",
+            "size": 10,
+            "layers": [
+                "venue",
+                "street",
+                "country",
+                "macroregion",
+                "region",
+                "county",
+                "localadmin",
+                "locality",
+                "borough",
+                "neighbourhood",
+                "continent",
+                "empire",
+                "dependency",
+                "macrocounty",
+                "macrohood",
+                "microhood",
+                "disputed",
+                "postalcode",
+                "ocean",
+                "marinearea"
+            ],
+            "private": false,
+            "lang": {
+                "name": "English",
+                "iso6391": "en",
+                "iso6393": "eng",
+                "via": "default",
+                "defaulted": true
+            },
+            "querySize": 20,
+            "parser": "pelias",
+            "parsed_text": {
+                "subject": "sk27pw",
+                "postcode": "sk27pw"
+            }
+        },
+        "warnings": [
+            "performance optimization: excluding 'address' layer"
+        ],
+        "engine": {
+            "name": "Pelias",
+            "author": "Mapzen",
+            "version": "1.0"
+        },
+        "timestamp": 1683038805883
+    },
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.134803,
+                    53.389195
+                ]
+            },
+            "properties": {
+                "id": "471781743",
+                "gid": "whosonfirst:postalcode:471781743",
+                "layer": "postalcode",
+                "source": "whosonfirst",
+                "source_id": "471781743",
+                "name": "SK2 7PW",
+                "postalcode": "SK2 7PW",
+                "postalcode_gid": "whosonfirst:postalcode:471781743",
+                "confidence": 1,
+                "match_type": "exact",
+                "accuracy": "centroid",
+                "country": "United Kingdom",
+                "country_gid": "whosonfirst:country:85633159",
+                "country_a": "GBR",
+                "macroregion": "England",
+                "macroregion_gid": "whosonfirst:macroregion:404227469",
+                "region": "Greater Manchester",
+                "region_gid": "whosonfirst:region:1360698555",
+                "county": "Stockport",
+                "county_gid": "whosonfirst:county:1360698879",
+                "locality": "Stockport",
+                "locality_gid": "whosonfirst:locality:101750527",
+                "continent": "Europe",
+                "continent_gid": "whosonfirst:continent:102191581",
+                "label": "SK2 7PW, Stockport, England, United Kingdom",
+                "addendum": {
+                    "concordances": {
+                        "gp:id": "26682291"
+                    }
+                }
+            },
+            "bbox": [
+                -2.134803,
+                53.389195,
+                -2.134803,
+                53.389195
+            ]
+        }
+    ],
+    "bbox": [
+        -2.134803,
+        53.389195,
+        -2.134803,
+        53.389195
+    ]
+}
