@@ -1,0 +1,22 @@
+.bottom-navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #4b4b4c;
+  height: 60px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.bottom-navbar a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+
+.bottom-navbar .active {
+  color: #d4af37;
+}
