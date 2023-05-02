@@ -1,13 +1,26 @@
 import React, { useState } from "react";
 import "../styles/startPage.css";
+import { getDirections } from "../services/api";
 
 const StartPage = () => {
   const [startPoint, SetStartPoint] = useState("");
   const [destinationPoint, setDestinationPoint] = useState("");
-  const [travelTime, setTravelTime] = useState(null);
 
   const getTravelTime = async (startPoint, destinationPoint) => {
-    console.log(startPoint, destinationPoint);
+    const apiKey = "ENTER API KEY HERE";
+
+    const startPointCoordinates = "-2.242631,53.480759";
+    const destinationPointCoordinates = "-2.134803,53.389195";
+
+    const directionsData = await getDirections(
+      startPointCoordinates,
+      destinationPointCoordinates,
+      apiKey
+    );
+
+    const durationInSeconds =
+      directionsData.features[0].properties.summary.duration;
+    console.log(durationInSeconds);
   };
 
   return (
