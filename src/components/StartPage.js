@@ -7,7 +7,7 @@ const StartPage = () => {
   const [destinationPoint, setDestinationPoint] = useState("");
 
   const getTravelTime = async (startPoint, destinationPoint) => {
-    const apiKey = "ENTER API KEY HERE";
+    const apiKey = "proces.env.REACT_APP_openmapAPIkey";
 
     const startPointCoordinates = "-2.242631,53.480759";
     const destinationPointCoordinates = "-2.134803,53.389195";
