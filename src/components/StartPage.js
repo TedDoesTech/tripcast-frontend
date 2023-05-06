@@ -1,33 +1,33 @@
 import React, { useState } from "react";
 import "../styles/startPage.css";
-import { getDirections } from "../services/api";
+import axios from "axios";
 
 const StartPage = () => {
   const [startPoint, SetStartPoint] = useState("");
   const [destinationPoint, setDestinationPoint] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const getTravelTime = async (startPoint, destinationPoint) => {
-    const apiKey = "proces.env.REACT_APP_openmapAPIkey";
-
-    const startPointCoordinates = "-2.242631,53.480759";
-    const destinationPointCoordinates = "-2.134803,53.389195";
-
-    const directionsData = await getDirections(
-      startPointCoordinates,
-      destinationPointCoordinates,
-      apiKey
-    );
-
-    const durationInSeconds =
-      directionsData.features[0].properties.summary.duration;
-    console.log(durationInSeconds);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    axios
+      .post("http://localhost:3001/coordinates", {
+        startPoint: startPoint,
+        destinationPoint: destinationPoint,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <div className="start-page container">
       <h1>Your Journey</h1>
       <p>Start a Journey to match your cast!</p>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="start-point">Start Point:</label>
         <input
           type="text"
@@ -45,9 +45,10 @@ const StartPage = () => {
           placeholder="Enter destination"
           onChange={(e) => setDestinationPoint(e.target.value)}
         />
-        <button onClick={() => getTravelTime(startPoint, destinationPoint)}>
-          Cast
+        <button type="submit" disabled={loading}>
+          {loading ? "Loading..." : "Cast"}
         </button>
+        {loading && <p>Estimated travel time... Finding podcasts...</p>}
       </form>
     </div>
   );
