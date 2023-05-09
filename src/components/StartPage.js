@@ -15,21 +15,14 @@ const StartPage = () => {
     setLoading(true);
 
     try {
-      const response = await axios
-        .post("http://localhost:3001/podcast", {
-          startPoint: startPoint,
-          destinationPoint: destinationPoint,
-          selectedGenre: selectedGenre,
-        })
-        .then((res) => {
-          const podcastResult = res.data.results;
-          console.log(podcastResult);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      navigate("/podcast");
+      const response = await axios.post("http://localhost:3001/podcast", {
+        startPoint: startPoint,
+        destinationPoint: destinationPoint,
+        selectedGenre: selectedGenre,
+      });
+      console.log(response.data.results);
+      const podcastResult = response.data.results;
+      navigate("/podcastResult", { state: { podcastResults: podcastResult } });
     } catch (error) {
       console.log(error);
     } finally {
