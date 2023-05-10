@@ -4,6 +4,7 @@ import "../styles/app.css";
 import StartPage from "./StartPage.js";
 import PodcastPage from "./PodcastResult";
 import BottomNavbar from "./BottomNavBar.js";
+import Podcast from "./Podcast.js";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<StartPage />} />
           <Route path="/podcastResult" element={<PodcastPage />} />
+          <Route path="/podcasts" element={<Podcast />} />
         </Routes>
       </div>
       <BottomNavbar />

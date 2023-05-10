@@ -10,7 +10,7 @@
 
 h1 {
   font-size: 2.5rem;
-  font-weight: 300;
+  font-weight: 500;
   color: #2a78e1;
   margin-bottom: 1rem;
 }
@@ -87,4 +87,21 @@ input[type="text"]:focus {
   100% {
     transform: rotate(360deg);
   }
+}
+
+select {
+  font-size: 1rem;
+  font-weight: 300;
+  padding: 0.5rem 1rem;
+  border: 1px solid #2a78e1;
+  border-radius: 5px;
+  outline: none;
+  width: 300px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+select:focus {
+  border: 1px solid #1c58b1;
+  box-shadow: 0 0 5px rgba(44, 120, 225, 0.2);
 }

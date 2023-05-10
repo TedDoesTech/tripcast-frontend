@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, Link } from "react-router-dom";
 import "../styles/podcastResult.css";
 
 const PodcastResult = () => {
@@ -13,6 +13,15 @@ const PodcastResult = () => {
     } else {
       setExpandedPodcastId(podcastId);
     }
+  };
+
+  const cleanDescription = (description) => {
+    const regex = /(<([^>]+)>)/gi;
+    return description.replace(regex, "");
+  };
+
+  const handlePlayButtonClick = (podcast) => {
+    localStorage.setItem("selectedPodcast", JSON.stringify(podcast));
   };
 
   return (
@@ -37,14 +46,21 @@ const PodcastResult = () => {
               <h3>{podcast.title_original}</h3>
               <h4>{Math.round(podcast.audio_length_sec / 60)} mins</h4>
               {podcast.id === expandedPodcastId ? (
-                <div className="play-button">
-                  <i className="fa fa-play"></i>
-                </div>
+                <Link
+                  to={{
+                    pathname: "/podcasts",
+                    state: { selectedPodcast: podcast },
+                  }}
+                  className="play-button"
+                  onClick={() => handlePlayButtonClick(podcast)}
+                >
+                  <button>Play</button>
+                </Link>
               ) : null}
             </div>
             {podcast.id === expandedPodcastId ? (
               <div className="podcast-description">
-                {podcast.description_original}
+                {cleanDescription(podcast.description_original)}
               </div>
             ) : null}
           </div>
