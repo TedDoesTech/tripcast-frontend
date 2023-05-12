@@ -1,0 +1,85 @@
+.onboarding-container {
+  width: 100%;
+  height: 95vh - 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.onboarding-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.onboarding-step img {
+  width: 400px;
+  height: auto;
+}
+
+.onboarding-heading {
+  font-size: 24px;
+  font-weight: bold;
+
+  color: #333;
+}
+
+.onboarding-text {
+  font-size: 16px;
+  color: #555;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.signup-form input {
+  width: 300px;
+  padding: 10px;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.onboarding-navigation {
+  display: flex;
+  justify-content: center;
+}
+
+.onboarding-nav-button {
+  background-color: #d4af37;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.onboarding-nav-button:disabled {
+  background-color: lightgray;
+  cursor: not-allowed;
+}
+
+.login-button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #555;
+}
