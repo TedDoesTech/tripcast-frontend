@@ -28,7 +28,7 @@ const Login = ({ setIsLoggedIn }) => {
       });
   };
   const navigateToOnboarding = () => {
-    navigate("/onboarding");
+    navigate("/");
   };
   return (
     <div className="onboarding-container">
