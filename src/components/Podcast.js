@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import AudioComponent from "../components/AudioComponent";
-import "../styles/Podcast.css";
+import "../styles/podcast.css";
 
 const Podcast = () => {
   const { state } = useLocation();
