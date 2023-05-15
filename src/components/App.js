@@ -11,14 +11,12 @@ import Login from "./Login";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  console.log("App.js", isLoggedIn);
   return (
     <Router>
       <div className="app">
         <Routes>
-          <Route
-            path="/"
-            element={<Onboarding setIsLoggedIn={setIsLoggedIn} />}
-          />
+          <Route path="/" element={<Onboarding />} />
           <Route
             path="/login"
             element={<Login setIsLoggedIn={setIsLoggedIn} />}
@@ -29,7 +27,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
-      {isLoggedIn && <BottomNavbar />}
+      {isLoggedIn && <BottomNavbar setIsLoggedIn={setIsLoggedIn} />}
     </Router>
   );
 }
