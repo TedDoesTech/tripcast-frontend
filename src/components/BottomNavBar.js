@@ -7,7 +7,11 @@ import { faHome, faHeadphones } from "@fortawesome/free-solid-svg-icons";
 const BottomNavbar = () => {
   return (
     <nav className="bottom-navbar">
-      <NavLink to="/" className="nav-item" activeclassname="nav-item-active">
+      <NavLink
+        to="/home"
+        className="nav-item"
+        activeclassname="nav-item-active"
+      >
         <FontAwesomeIcon icon={faHome} />
       </NavLink>
       <NavLink

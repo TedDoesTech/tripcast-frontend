@@ -7,6 +7,7 @@ import BottomNavbar from "./BottomNavBar.js";
 import Podcast from "./Podcast.js";
 import Settings from "./settingsPage";
 import Onboarding from "./onboarding";
+import Login from "./Login";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,10 +16,14 @@ function App() {
       <div className="app">
         <Routes>
           <Route
-            path="/onboarding"
+            path="/"
             element={<Onboarding setIsLoggedIn={setIsLoggedIn} />}
           />
-          <Route path="/" element={<StartPage />} />
+          <Route
+            path="/login"
+            element={<Login setIsLoggedIn={setIsLoggedIn} />}
+          />
+          <Route path="/home" element={<StartPage />} />
           <Route path="/podcastResult" element={<PodcastPage />} />
           <Route path="/podcasts" element={<Podcast />} />
           <Route path="/settings" element={<Settings />} />

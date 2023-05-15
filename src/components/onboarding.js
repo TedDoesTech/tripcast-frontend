@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { auth } from "../config/firebaseConfig";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import SwipeableViews from "react-swipeable-views";
 import car from "../assets/car.png";
 import signup from "../assets/signup.png";
@@ -33,25 +30,12 @@ const Onboarding = ({ setIsLoggedIn }) => {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user, " signed up successfully");
+        navigate("/home");
       })
       .catch((error) => {
         console.error("Error signing up: ", error);
       });
   };
-
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        navigate("/");
-        console.log(user, " Logged in successfully");
-        setIsLoggedIn(true);
-      })
-      .catch((error) => {
-        console.log("Error logging in: ", error);
-      });
-  };
-
   const images = [
     {
       image: car,
@@ -69,7 +53,9 @@ const Onboarding = ({ setIsLoggedIn }) => {
       text: "Unlock exclusive benefits and access",
     },
   ];
-
+  const navigateToLogin = () => {
+    navigate("/login");
+  };
   return (
     <div className="onboarding-container">
       <SwipeableViews
@@ -92,10 +78,15 @@ const Onboarding = ({ setIsLoggedIn }) => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
-                  type="Password"
+                  type="password"
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                />
+                <input
+                  type="password"
+                  placeholder="Confirm Password"
+                  value={null}
                 />
               </div>
             )}
@@ -109,7 +100,7 @@ const Onboarding = ({ setIsLoggedIn }) => {
             <button className="onboarding-nav-button" onClick={handleSignUp}>
               Create an account
             </button>
-            <button className="login-button" onClick={handleLogin}>
+            <button className="login-button" onClick={navigateToLogin}>
               Login
             </button>
           </div>
