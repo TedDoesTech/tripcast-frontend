@@ -1,14 +1,22 @@
 import React, { useState } from "react";
+import { auth } from "../config/firebaseConfig";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import SwipeableViews from "react-swipeable-views";
 import car from "../assets/car.png";
-import bike from "../assets/bike.png";
 import signup from "../assets/signup.png";
 import "../styles/onboarding.css";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const Onboarding = () => {
+const Onboarding = ({ setIsLoggedIn }) => {
   const [activeStep, setActiveStep] = useState(0);
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleStepChange = (step) => {
     setActiveStep(step);
@@ -21,12 +29,27 @@ const Onboarding = () => {
   };
 
   const handleSignUp = () => {
-    console.log("Name:", name);
-    console.log("Email:", email);
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user, " signed up successfully");
+      })
+      .catch((error) => {
+        console.error("Error signing up: ", error);
+      });
   };
 
   const handleLogin = () => {
-    console.log("Login with:", email);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        navigate("/");
+        console.log(user, " Logged in successfully");
+        setIsLoggedIn(true);
+      })
+      .catch((error) => {
+        console.log("Error logging in: ", error);
+      });
   };
 
   const images = [
@@ -63,16 +86,16 @@ const Onboarding = () => {
             {activeStep === images.length - 1 && (
               <div className="signup-form">
                 <input
-                  type="text"
-                  placeholder="Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <input
                   type="email"
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                  type="Password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             )}
@@ -102,6 +125,10 @@ const Onboarding = () => {
       </div>
     </div>
   );
+};
+
+Onboarding.propTypes = {
+  setIsLoggedIn: PropTypes.func.isRequired,
 };
 
 export default Onboarding;
