@@ -8,7 +8,7 @@ import "../styles/onboarding.css";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const Onboarding = ({ setIsLoggedIn }) => {
+const Onboarding = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -116,10 +116,6 @@ const Onboarding = ({ setIsLoggedIn }) => {
       </div>
     </div>
   );
-};
-
-Onboarding.propTypes = {
-  setIsLoggedIn: PropTypes.func.isRequired,
 };
 
 export default Onboarding;
