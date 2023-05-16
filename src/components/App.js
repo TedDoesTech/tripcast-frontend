@@ -8,6 +8,7 @@ import Podcast from "./Podcast.js";
 import Settings from "./settingsPage";
 import Onboarding from "./onboarding";
 import Login from "./Login";
+import FavoriteJourneysPage from "./FavouriteJourneysPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,6 +26,7 @@ function App() {
           <Route path="/podcastResult" element={<PodcastPage />} />
           <Route path="/podcasts" element={<Podcast />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/saved" element={<FavoriteJourneysPage />} />
         </Routes>
       </div>
       {isLoggedIn && <BottomNavbar setIsLoggedIn={setIsLoggedIn} />}
