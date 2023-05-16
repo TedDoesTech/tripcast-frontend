@@ -12,6 +12,9 @@ const Onboarding = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [signUpError, setSignUpError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -26,6 +29,11 @@ const Onboarding = () => {
   };
 
   const handleSignUp = () => {
+    if (password !== confirmPassword) {
+      setSignUpError(true);
+      setErrorMessage("Passwords do not match");
+      return;
+    }
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -34,8 +42,17 @@ const Onboarding = () => {
       })
       .catch((error) => {
         console.error("Error signing up: ", error);
+        setSignUpError(true);
+        if (error.code === "auth/email-already-in-use") {
+          setErrorMessage("Email is already in use");
+        } else if (error.code === "auth/invalid-email") {
+          setErrorMessage("Invalid email format");
+        } else {
+          setErrorMessage("Unexpected error occurred, please try again");
+        }
       });
   };
+
   const images = [
     {
       image: car,
@@ -53,9 +70,11 @@ const Onboarding = () => {
       text: "Unlock exclusive benefits and access",
     },
   ];
+
   const navigateToLogin = () => {
     navigate("/login");
   };
+
   return (
     <div className="onboarding-container">
       <SwipeableViews
@@ -76,18 +95,25 @@ const Onboarding = () => {
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className={signUpError ? "shake error" : ""}
                 />
                 <input
                   type="password"
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className={signUpError ? "shake error" : ""}
                 />
                 <input
                   type="password"
                   placeholder="Confirm Password"
-                  value={null}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={signUpError ? "shake error" : ""}
                 />
+                <p className={signUpError ? "error-message" : ""}>
+                  {errorMessage}
+                </p>
               </div>
             )}
           </div>
