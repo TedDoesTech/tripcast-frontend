@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import {
-  getFirestore,
-  doc,
-  updateDoc,
-  arrayUnion,
-  getDoc,
-} from "firebase/firestore";
-
-const db = getFirestore();
+import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { auth, db } from "../config/firebaseConfig";
 
 const FavoriteJourneysPage = ({ userId }) => {
   const [favoriteJourneys, setFavoriteJourneys] = useState([]);
+  const [newJourney, setNewJourney] = useState("");
 
-  const addFavoriteJourney = async (journey) => {
-    const userRef = doc(db, "users", userId);
+  const addFavoriteJourney = async () => {
+    if (newJourney.trim() !== "") {
+      const userRef = doc(db, "users", userId);
 
-    await updateDoc(userRef, {
-      favoriteJourneys: arrayUnion(journey),
-    });
+      await updateDoc(userRef, {
+        favoriteJourneys: [...favoriteJourneys, newJourney],
+      });
 
-    fetchFavoriteJourneys();
+      fetchFavoriteJourneys();
+      setNewJourney("");
+    }
   };
 
   const fetchFavoriteJourneys = async () => {
@@ -46,9 +43,14 @@ const FavoriteJourneysPage = ({ userId }) => {
         <div key={index}>{journey}</div>
       ))}
 
-      <button onClick={() => addFavoriteJourney("New Journey")}>
-        Add Favorite Journey
-      </button>
+      <div>
+        <input
+          type="text"
+          value={newJourney}
+          onChange={(e) => setNewJourney(e.target.value)}
+        />
+        <button onClick={addFavoriteJourney}>Add Favorite Journey</button>
+      </div>
     </div>
   );
 };
