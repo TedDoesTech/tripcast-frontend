@@ -5,7 +5,7 @@ import axios from "axios";
 import { genreOptions } from "./genres";
 import Select from "react-select";
 import { db } from "../config/firebaseConfig";
-import { doc, addDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import PropTypes from "prop-types";
 
 const StartPage = ({ userId }) => {
@@ -18,21 +18,29 @@ const StartPage = ({ userId }) => {
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
+  const fetchFavoriteJourneys = async () => {
+    const userRef = doc(db, "users", userId);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      setFavoriteJourneys(userData.savedJourneys || []);
+    } else {
+      console.log("No such user document!");
+    }
+  };
+
   useEffect(() => {
-    const fetchFavoriteJourneys = async () => {
-      const userRef = doc(db, "users", userId);
-      const userDoc = await getDoc(userRef);
-
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        setFavoriteJourneys(userData.savedJourneys || []);
-      } else {
-        console.log("No such user document!");
-      }
-    };
-
     fetchFavoriteJourneys();
   }, [userId]);
+
+  useEffect(() => {
+    if (selectedJourney) {
+      const [start, destination] = selectedJourney.value.split(" - ");
+      setStartPoint(start);
+      setDestinationPoint(destination);
+    }
+  }, [selectedJourney]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,22 +70,32 @@ const StartPage = ({ userId }) => {
       startPoint.trim() !== "" &&
       destinationPoint.trim() !== ""
     ) {
-      console.log(`Saving journey: ${startPoint} - ${destinationPoint}`);
+      const journeyName = window.prompt("Enter a name for your journey:");
+      if (journeyName === null || journeyName.trim() === "") {
+        alert("Please provide a name for your journey.");
+        return;
+      }
+
+      console.log(
+        `Saving journey: ${journeyName}:{startPoint} - ${destinationPoint}`
+      );
       const userRef = doc(db, "users", userId);
-      console.log("userRef= ", userRef);
       const userDoc = await getDoc(userRef);
 
       if (userDoc.exists()) {
         const newJourney = {
           value: `${startPoint} - ${destinationPoint}`,
-          label: `${startPoint} - ${destinationPoint}`,
+          label: journeyName,
         };
 
         await updateDoc(userRef, {
           savedJourneys: arrayUnion(newJourney),
         });
 
+        console.log("userDoc= ", userDoc);
+
         alert("Journey saved as favorite!");
+        fetchFavoriteJourneys(); // update favorite journeys after saving a new one
       } else {
         console.log("No such user document!");
       }
