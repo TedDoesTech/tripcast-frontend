@@ -9,7 +9,7 @@ import "../styles/onboarding.css";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const Onboarding = () => {
+const Onboarding = ({ setUserId, setIsLoggedIn }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,12 +39,14 @@ const Onboarding = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user, " signed up successfully");
+        setUserId(user.uid); // set userId state
+        setIsLoggedIn(true); // set isLoggedIn state
         const savedJourneysData = {};
         return setDoc(doc(db, "users", user.uid), {
           savedJourneys: savedJourneysData,
-        });
+        }).then(() => user);
       })
-      .then(() => {
+      .then((user) => {
         navigate("/home", { state: { userId: user.uid } });
       })
       .catch((error) => {
@@ -149,6 +151,11 @@ const Onboarding = () => {
       </div>
     </div>
   );
+};
+
+Onboarding.propTypes = {
+  setUserId: PropTypes.func.isRequired,
+  setIsLoggedIn: PropTypes.func.isRequired,
 };
 
 export default Onboarding;

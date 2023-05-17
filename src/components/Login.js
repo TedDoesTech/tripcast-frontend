@@ -24,6 +24,7 @@ const Login = ({ setIsLoggedIn }) => {
         const user = userCredential.user;
         console.log(user, " Logged in successfully");
         setIsLoggedIn(true);
+        setUserId(user.uid);
         setLoginError(false);
         navigate("/home");
       })

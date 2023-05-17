@@ -18,7 +18,12 @@ function App() {
     <Router>
       <div className="app">
         <Routes>
-          <Route path="/" element={<Onboarding setUserId={setUserId} />} />
+          <Route
+            path="/"
+            element={
+              <Onboarding setUserId={setUserId} setIsLoggedIn={setIsLoggedIn} />
+            }
+          />
           <Route
             path="/login"
             element={
