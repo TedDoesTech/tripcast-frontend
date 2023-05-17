@@ -5,9 +5,17 @@ import axios from "axios";
 import { genreOptions } from "./genres";
 import Select from "react-select";
 import { db } from "../config/firebaseConfig";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  addDoc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
+import PropTypes from "prop-types";
 
-const StartPage = () => {
+const StartPage = ({ userId }) => {
   const navigate = useNavigate();
   const [startPoint, setStartPoint] = useState("");
   const [destinationPoint, setDestinationPoint] = useState("");
@@ -19,13 +27,19 @@ const StartPage = () => {
 
   useEffect(() => {
     const fetchFavoriteJourneys = async () => {
-      const journeysSnapshot = await db.collection("journeys").get();
-      const journeys = journeysSnapshot.docs.map((doc) => doc.data());
-      setFavoriteJourneys(journeys);
+      const userRef = doc(db, "users", userId);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        setFavoriteJourneys(userData.savedJourneys || []);
+      } else {
+        console.log("No such user document!");
+      }
     };
 
     fetchFavoriteJourneys();
-  }, []);
+  }, [userId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,13 +70,23 @@ const StartPage = () => {
       destinationPoint.trim() !== ""
     ) {
       console.log(`Saving journey: ${startPoint} - ${destinationPoint}`);
-      const newJourney = {
-        value: `${startPoint} - ${destinationPoint}`,
-        label: `${startPoint} - ${destinationPoint}`,
-      };
-      await addDoc(collection(db, "journeys"), newJourney);
-      setFavoriteJourneys([...favoriteJourneys, newJourney]);
-      alert("Journey saved as favorite!");
+      const userRef = doc(db, "users", userId);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        const newJourney = {
+          value: `${startPoint} - ${destinationPoint}`,
+          label: `${startPoint} - ${destinationPoint}`,
+        };
+
+        await updateDoc(userRef, {
+          savedJourneys: arrayUnion(newJourney),
+        });
+
+        alert("Journey saved as favorite!");
+      } else {
+        console.log("No such user document!");
+      }
     }
   };
 
@@ -109,7 +133,6 @@ const StartPage = () => {
               value={genreOptions.find(
                 (option) => option.value === selectedGenre
               )}
-              onChange={handleGenreChange}
             />
           </div>
 
@@ -144,6 +167,10 @@ const StartPage = () => {
       </form>
     </div>
   );
+};
+
+StartPage.propTypes = {
+  userId: PropTypes.string.isRequired,
 };
 
 export default StartPage;

@@ -17,14 +17,15 @@ const Login = ({ setIsLoggedIn }) => {
     heading: "Login now",
     text: "Unlock exclusive benefits and access",
   };
+
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        navigate("/home");
         console.log(user, " Logged in successfully");
         setIsLoggedIn(true);
         setLoginError(false);
+        navigate("/home");
       })
       .catch((error) => {
         console.log("Error logging in: ", error);
@@ -40,9 +41,11 @@ const Login = ({ setIsLoggedIn }) => {
         }
       });
   };
+
   const navigateToOnboarding = () => {
     navigate("/");
   };
+
   return (
     <div className="onboarding-container">
       <div className="onboarding-step">
@@ -83,7 +86,9 @@ const Login = ({ setIsLoggedIn }) => {
     </div>
   );
 };
+
 Login.propTypes = {
   setIsLoggedIn: PropTypes.func.isRequired,
 };
+
 export default Login;

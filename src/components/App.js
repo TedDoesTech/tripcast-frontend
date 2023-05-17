@@ -12,17 +12,20 @@ import FavoriteJourneysPage from "./FavouriteJourneysPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  console.log("App.js", isLoggedIn);
+  const [userId, setUserId] = useState("");
+
   return (
     <Router>
       <div className="app">
         <Routes>
-          <Route path="/" element={<Onboarding />} />
+          <Route path="/" element={<Onboarding setUserId={setUserId} />} />
           <Route
             path="/login"
-            element={<Login setIsLoggedIn={setIsLoggedIn} />}
+            element={
+              <Login setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} />
+            }
           />
-          <Route path="/home" element={<StartPage />} />
+          <Route path="/home" element={<StartPage userId={userId} />} />
           <Route path="/podcastResult" element={<PodcastPage />} />
           <Route path="/podcasts" element={<Podcast />} />
           <Route path="/settings" element={<Settings />} />

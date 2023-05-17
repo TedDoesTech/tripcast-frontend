@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { auth } from "../config/firebaseConfig";
+import { auth, db } from "../config/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import SwipeableViews from "react-swipeable-views";
 import car from "../assets/car.png";
 import signup from "../assets/signup.png";
@@ -38,7 +39,13 @@ const Onboarding = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user, " signed up successfully");
-        navigate("/home");
+        const savedJourneysData = {};
+        return setDoc(doc(db, "users", user.uid), {
+          savedJourneys: savedJourneysData,
+        });
+      })
+      .then(() => {
+        navigate("/home", { state: { userId: user.uid } });
       })
       .catch((error) => {
         console.error("Error signing up: ", error);
