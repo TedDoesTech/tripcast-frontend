@@ -5,14 +5,7 @@ import axios from "axios";
 import { genreOptions } from "./genres";
 import Select from "react-select";
 import { db } from "../config/firebaseConfig";
-import {
-  collection,
-  getDocs,
-  doc,
-  addDoc,
-  updateDoc,
-  arrayUnion,
-} from "firebase/firestore";
+import { doc, addDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import PropTypes from "prop-types";
 
 const StartPage = ({ userId }) => {
@@ -71,6 +64,7 @@ const StartPage = ({ userId }) => {
     ) {
       console.log(`Saving journey: ${startPoint} - ${destinationPoint}`);
       const userRef = doc(db, "users", userId);
+      console.log("userRef= ", userRef);
       const userDoc = await getDoc(userRef);
 
       if (userDoc.exists()) {
@@ -88,10 +82,6 @@ const StartPage = ({ userId }) => {
         console.log("No such user document!");
       }
     }
-  };
-
-  const handleGenreChange = (selectedOption) => {
-    setSelectedGenre(selectedOption.value);
   };
 
   const handleJourneyChange = (selectedOption) => {

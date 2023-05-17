@@ -35,13 +35,16 @@ const Onboarding = ({ setUserId, setIsLoggedIn }) => {
       setErrorMessage("Passwords do not match");
       return;
     }
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user, " signed up successfully");
-        setUserId(user.uid); // set userId state
-        setIsLoggedIn(true); // set isLoggedIn state
-        const savedJourneysData = {};
+        setUserId(user.uid);
+        setIsLoggedIn(true);
+
+        const savedJourneysData = [];
+
         return setDoc(doc(db, "users", user.uid), {
           savedJourneys: savedJourneysData,
         }).then(() => user);

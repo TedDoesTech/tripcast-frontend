@@ -11,6 +11,7 @@ const Login = ({ setIsLoggedIn }) => {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [userId, setUserId] = useState("");
   const navigate = useNavigate();
   const images = {
     image: signup,

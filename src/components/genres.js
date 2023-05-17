@@ -30,7 +30,6 @@ export const genreOptions = [
   { value: "110", label: "Hobbies" },
   { value: "84", label: "Fashion & Beauty" },
   { value: "85", label: "Travel" },
-  { value: "89", label: "Business" },
   { value: "87", label: "Investing" },
   { value: "123", label: "Science" },
   { value: "104", label: "Medicine" },

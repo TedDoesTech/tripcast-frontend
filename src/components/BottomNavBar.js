@@ -39,7 +39,7 @@ const BottomNavbar = ({ setIsLoggedIn }) => {
       </NavLink>
       <NavLink
         onClick={handleLogout}
-        to="/"
+        to="/login"
         className="nav-item"
         activeclassname="nav-item-active"
       >
