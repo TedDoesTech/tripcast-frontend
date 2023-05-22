@@ -31,12 +31,14 @@
 .onboarding-text {
   font-size: 16px;
   color: #555;
+  margin-bottom: 0;
 }
 
 .signup-form {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0%;
 }
 
 .signup-form input {
@@ -82,4 +84,39 @@
 
 .login-button:hover {
   background-color: #555;
+}
+
+.error {
+  border: 1px solid red;
+}
+
+@keyframes shake {
+  0% {
+    margin-left: 0rem;
+  }
+  25% {
+    margin-left: 0.5rem;
+  }
+  50% {
+    margin-left: 0rem;
+  }
+  75% {
+    margin-left: -0.5rem;
+  }
+  100% {
+    margin-left: 0rem;
+  }
+}
+
+.shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin: 8px;
 }

@@ -1,14 +1,23 @@
 import React, { useState } from "react";
+import { auth, db } from "../config/firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import SwipeableViews from "react-swipeable-views";
 import car from "../assets/car.png";
-import bike from "../assets/bike.png";
 import signup from "../assets/signup.png";
 import "../styles/onboarding.css";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const Onboarding = () => {
+const Onboarding = ({ setUserId, setIsLoggedIn }) => {
   const [activeStep, setActiveStep] = useState(0);
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [signUpError, setSignUpError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const navigate = useNavigate();
 
   const handleStepChange = (step) => {
     setActiveStep(step);
@@ -21,12 +30,39 @@ const Onboarding = () => {
   };
 
   const handleSignUp = () => {
-    console.log("Name:", name);
-    console.log("Email:", email);
-  };
+    if (password !== confirmPassword) {
+      setSignUpError(true);
+      setErrorMessage("Passwords do not match");
+      return;
+    }
 
-  const handleLogin = () => {
-    console.log("Login with:", email);
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user, " signed up successfully");
+        setUserId(user.uid);
+        setIsLoggedIn(true);
+
+        const savedJourneysData = [];
+
+        return setDoc(doc(db, "users", user.uid), {
+          savedJourneys: savedJourneysData,
+        }).then(() => user);
+      })
+      .then((user) => {
+        navigate("/home", { state: { userId: user.uid } });
+      })
+      .catch((error) => {
+        console.error("Error signing up: ", error);
+        setSignUpError(true);
+        if (error.code === "auth/email-already-in-use") {
+          setErrorMessage("Email is already in use");
+        } else if (error.code === "auth/invalid-email") {
+          setErrorMessage("Invalid email format");
+        } else {
+          setErrorMessage("Unexpected error occurred, please try again");
+        }
+      });
   };
 
   const images = [
@@ -47,6 +83,10 @@ const Onboarding = () => {
     },
   ];
 
+  const navigateToLogin = () => {
+    navigate("/login");
+  };
+
   return (
     <div className="onboarding-container">
       <SwipeableViews
@@ -63,17 +103,29 @@ const Onboarding = () => {
             {activeStep === images.length - 1 && (
               <div className="signup-form">
                 <input
-                  type="text"
-                  placeholder="Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <input
                   type="email"
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className={signUpError ? "shake error" : ""}
                 />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={signUpError ? "shake error" : ""}
+                />
+                <input
+                  type="password"
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={signUpError ? "shake error" : ""}
+                />
+                <p className={signUpError ? "error-message" : ""}>
+                  {errorMessage}
+                </p>
               </div>
             )}
           </div>
@@ -86,7 +138,7 @@ const Onboarding = () => {
             <button className="onboarding-nav-button" onClick={handleSignUp}>
               Create an account
             </button>
-            <button className="login-button" onClick={handleLogin}>
+            <button className="login-button" onClick={navigateToLogin}>
               Login
             </button>
           </div>
@@ -102,6 +154,11 @@ const Onboarding = () => {
       </div>
     </div>
   );
+};
+
+Onboarding.propTypes = {
+  setUserId: PropTypes.func.isRequired,
+  setIsLoggedIn: PropTypes.func.isRequired,
 };
 
 export default Onboarding;

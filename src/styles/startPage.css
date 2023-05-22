@@ -26,6 +26,7 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 label {
@@ -102,6 +103,34 @@ select {
 }
 
 select:focus {
+  border: 1px solid #1c58b1;
+  box-shadow: 0 0 5px rgba(44, 120, 225, 0.2);
+}
+
+.dropdown-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.dropdown-item {
+  display: flex;
+  flex-direction: column;
+  width: 35%;
+  text-align: center;
+}
+
+.dropdown {
+  font-size: 1rem;
+  font-weight: 300;
+  padding: 0.5rem 1rem;
+  border: 1px solid #2a78e1;
+  border-radius: 5px;
+  outline: none;
+}
+
+.dropdown:focus {
   border: 1px solid #1c58b1;
   box-shadow: 0 0 5px rgba(44, 120, 225, 0.2);
 }

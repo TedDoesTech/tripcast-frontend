@@ -1,14 +1,46 @@
-import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/startPage.css";
 import axios from "axios";
+import { genreOptions } from "./genres";
+import Select from "react-select";
+import { db } from "../config/firebaseConfig";
+import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import PropTypes from "prop-types";
 
-const StartPage = () => {
+const StartPage = ({ userId }) => {
   const navigate = useNavigate();
-  const [startPoint, SetStartPoint] = useState("");
+  const [startPoint, setStartPoint] = useState("");
   const [destinationPoint, setDestinationPoint] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("");
+  const [selectedJourney, setSelectedJourney] = useState(null);
+  const [favoriteJourneys, setFavoriteJourneys] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const fetchFavoriteJourneys = async () => {
+    const userRef = doc(db, "users", userId);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      setFavoriteJourneys(userData.savedJourneys || []);
+    } else {
+      console.log("No such user document!");
+    }
+  };
+
+  useEffect(() => {
+    fetchFavoriteJourneys();
+  }, [userId]);
+
+  useEffect(() => {
+    if (selectedJourney) {
+      const [start, destination] = selectedJourney.value.split(" - ");
+      setStartPoint(start);
+      setDestinationPoint(destination);
+    }
+  }, [selectedJourney]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,6 +62,50 @@ const StartPage = () => {
     }
   };
 
+  const handleToggleFavorite = async () => {
+    setIsFavorite(!isFavorite);
+
+    if (
+      !isFavorite &&
+      startPoint.trim() !== "" &&
+      destinationPoint.trim() !== ""
+    ) {
+      const journeyName = window.prompt("Enter a name for your journey:");
+      if (journeyName === null || journeyName.trim() === "") {
+        alert("Please provide a name for your journey.");
+        return;
+      }
+
+      console.log(
+        `Saving journey: ${journeyName}:{startPoint} - ${destinationPoint}`
+      );
+      const userRef = doc(db, "users", userId);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        const newJourney = {
+          value: `${startPoint} - ${destinationPoint}`,
+          label: journeyName,
+        };
+
+        await updateDoc(userRef, {
+          savedJourneys: arrayUnion(newJourney),
+        });
+
+        console.log("userDoc= ", userDoc);
+
+        alert("Journey saved as favorite!");
+        fetchFavoriteJourneys(); // update favorite journeys after saving a new one
+      } else {
+        console.log("No such user document!");
+      }
+    }
+  };
+
+  const handleJourneyChange = (selectedOption) => {
+    setSelectedJourney(selectedOption);
+  };
+
   return (
     <div className="start-page container">
       <h1>Your Journey</h1>
@@ -41,45 +117,57 @@ const StartPage = () => {
           id="start-point"
           name="start-point"
           placeholder="Enter starting location"
-          onChange={(e) => SetStartPoint(e.target.value)}
+          value={startPoint}
+          onChange={(e) => setStartPoint(e.target.value)}
         />
-
         <label htmlFor="destination">Destination:</label>
         <input
           type="text"
           id="destination"
           name="destination"
           placeholder="Enter destination"
+          value={destinationPoint}
           onChange={(e) => setDestinationPoint(e.target.value)}
         />
 
-        <label htmlFor="genre">Select Genre: </label>
-        <select
-          id="genre"
-          name="genre"
-          value={selectedGenre}
-          onChange={(e) => setSelectedGenre(e.target.value)}
-        >
-          <option value=""> --Please select an genre--</option>
-          <option value="133"> Comedy </option>
-          <option value="77"> Sports </option>
-          <option value="99"> News </option>
-          <option value="127"> Technology </option>
-          <option value="93"> Business </option>
-          <option value="134"> Music </option>
-          <option value="125"> History </option>
-          <option value="151"> Locally Focused </option>
-          <option value="132"> Kids & Family </option>
-          <option value="168"> Fiction </option>
-          <option value="122"> Society & Culture </option>
-          <option value="88"> Health & Fitness </option>
-          <option value="100"> Arts </option>
-          <option value="69">Religion & Spirituality</option>
-          <option value="117"> Government </option>
-          <option value="135"> True Crime </option>
-          <option value="68"> TV & Film </option>
-        </select>
+        <div className="dropdown-container">
+          <div className="dropdown-item">
+            <label htmlFor="genre">Select Genre: </label>
+            <Select
+              id="genre"
+              name="genre"
+              options={genreOptions}
+              className="dropdown"
+              value={genreOptions.find(
+                (option) => option.value === selectedGenre
+              )}
+            />
+          </div>
 
+          <div className="dropdown-item">
+            <label htmlFor="journey">Favorite Journeys: </label>
+            <Select
+              id="journey"
+              name="journey"
+              options={favoriteJourneys}
+              className="dropdown"
+              value={favoriteJourneys.find(
+                (option) => option.value === selectedJourney?.value
+              )}
+              onChange={handleJourneyChange}
+            />
+          </div>
+        </div>
+        <div className onChange={handleJourneyChange} />
+        <div className="favorite-journey-container">
+          <button
+            type="button"
+            className={`favorite-button${isFavorite ? " favorite" : ""}`}
+            onClick={handleToggleFavorite}
+          >
+            Save as Favorite
+          </button>
+        </div>
         <button type="submit" disabled={loading}>
           {loading ? "Loading..." : "Cast"}
         </button>
@@ -87,6 +175,10 @@ const StartPage = () => {
       </form>
     </div>
   );
+};
+
+StartPage.propTypes = {
+  userId: PropTypes.string.isRequired,
 };
 
 export default StartPage;
